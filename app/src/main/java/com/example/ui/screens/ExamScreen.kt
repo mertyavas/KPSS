@@ -220,29 +220,68 @@ fun ExamScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(
-                                color = currentQuestion.subject.color.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(8.dp)
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = currentQuestion.subject.displayName,
-                                    color = currentQuestion.subject.color,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
+                                Surface(
+                                    color = currentQuestion.subject.color.copy(alpha = 0.15f),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text(
+                                        text = currentQuestion.subject.displayName,
+                                        color = currentQuestion.subject.color,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+
+                                Surface(
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text(
+                                        text = currentQuestion.topic,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        fontSize = 11.sp,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
                             }
 
-                            Surface(
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                shape = RoundedCornerShape(8.dp)
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = currentQuestion.topic,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 11.sp,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
+                                if (currentQuestion.isPastExam) {
+                                    Surface(
+                                        color = AmberAccent.copy(alpha = 0.18f),
+                                        shape = RoundedCornerShape(8.dp),
+                                        border = androidx.compose.foundation.BorderStroke(1.dp, AmberAccent.copy(alpha = 0.4f))
+                                    ) {
+                                        Text(
+                                            text = "🏛️ ${currentQuestion.formattedExamBadge}",
+                                            color = Color(0xFFB45309),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 11.sp,
+                                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp)
+                                        )
+                                    }
+                                }
+
+                                Surface(
+                                    color = if (currentQuestion.difficulty.contains("Zor")) Color(0xFFDC2626).copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text(
+                                        text = if (currentQuestion.difficulty.contains("Zor")) "🔥 ${currentQuestion.difficulty}" else currentQuestion.difficulty,
+                                        color = if (currentQuestion.difficulty.contains("Zor")) Color(0xFFDC2626) else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 11.sp,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                                    )
+                                }
                             }
                         }
 
@@ -609,12 +648,22 @@ fun ExamResultReviewScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Soru ${index + 1} • ${q.subject.displayName}",
-                                fontWeight = FontWeight.Bold,
-                                color = q.subject.color,
-                                fontSize = 13.sp
-                            )
+                            Column {
+                                Text(
+                                    text = "Soru ${index + 1} • ${q.subject.displayName}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = q.subject.color,
+                                    fontSize = 13.sp
+                                )
+                                if (q.isPastExam) {
+                                    Text(
+                                        text = "🏛️ ${q.formattedExamBadge}",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = Color(0xFFB45309)
+                                    )
+                                }
+                            }
 
                             Surface(
                                 color = when {

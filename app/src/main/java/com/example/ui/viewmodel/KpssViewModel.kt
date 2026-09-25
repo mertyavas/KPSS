@@ -98,6 +98,28 @@ class KpssViewModel(application: Application) : AndroidViewModel(application) {
         _isExamActive.value = true
     }
 
+    fun startPastExamQuiz(year: String? = null) {
+        val selected = KpssQuestionsData.getPastExamQuestionsForExam(year)
+        _activeExamTitle.value = if (year != null) "$year KPSS Çıkmış Soruları (${selected.size} Soru)" else "Geçmiş Yıllarda Çıkmış KPSS Soruları (${selected.size} Soru)"
+        _activeExamSubject.value = null
+        _currentQuestions.value = selected
+        _currentQuestionIndex.value = 0
+        _userAnswers.value = emptyMap()
+        _isExamFinished.value = false
+        _isExamActive.value = true
+    }
+
+    fun startHardQuestionsQuiz() {
+        val selected = KpssQuestionsData.getHardQuestions().shuffled()
+        _activeExamTitle.value = "🔥 KPSS Zor & Eleme Soruları (${selected.size} Soru)"
+        _activeExamSubject.value = null
+        _currentQuestions.value = selected.ifEmpty { KpssQuestionsData.questions }
+        _currentQuestionIndex.value = 0
+        _userAnswers.value = emptyMap()
+        _isExamFinished.value = false
+        _isExamActive.value = true
+    }
+
     fun selectOption(questionId: Int, optionIndex: Int) {
         if (_isExamFinished.value) return
         val current = _userAnswers.value.toMutableMap()

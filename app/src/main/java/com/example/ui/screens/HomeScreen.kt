@@ -76,6 +76,8 @@ fun HomeScreen(
     wrongQuestions: List<WrongQuestionEntity>,
     onStartTrialExam: () -> Unit,
     onStartSubjectQuiz: (Subject) -> Unit,
+    onStartPastExamQuiz: (String?) -> Unit,
+    onStartHardQuestionsQuiz: () -> Unit,
     onNavigateToLectures: () -> Unit,
     onNavigateToCurrentAffairs: () -> Unit,
     onNavigateToWrongQuestions: () -> Unit,
@@ -180,6 +182,193 @@ fun HomeScreen(
                     ) {
                         Text("Çöz", fontWeight = FontWeight.Bold)
                     }
+                }
+            }
+        }
+
+        // 🏛️ Section: Geçmiş Yıllarda Çıkmış KPSS Soruları
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("past_exam_section_card"),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFEF3C7) // Warm Golden Amber
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp)
+                ) {
+                    val allPastQuestions = remember { KpssQuestionsData.getPastExamQuestions(null) }
+                    val hardQuestions = remember { KpssQuestionsData.getHardQuestions() }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Surface(
+                                color = Color(0xFFB45309),
+                                shape = CircleShape
+                            ) {
+                                Box(
+                                    modifier = Modifier.size(38.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("🏛️", fontSize = 20.sp)
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = "Çıkmış KPSS Soruları",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color(0xFF78350F)
+                                )
+                                Text(
+                                    text = "${allPastQuestions.size} çıkmış soru • Yıl etiketli",
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF92400E)
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { onStartPastExamQuiz(null) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB45309)),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.testTag("start_all_past_exams_button")
+                        ) {
+                            Text("Tümünü Çöz (${allPastQuestions.size})", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Text(
+                        text = "Yıla Göre Çıkmış Soruları Başlat:",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF78350F)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val years = listOf("2024", "2023", "2022", "2021", "2020", "2019", "2018")
+                        items(years) { year ->
+                            val yearCount = allPastQuestions.count { it.year == year }
+                            Surface(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable { onStartPastExamQuiz(year) }
+                                    .testTag("year_quiz_chip_$year"),
+                                shape = RoundedCornerShape(10.dp),
+                                color = Color.White,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFD97706))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "$year KPSS ($yearCount)",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp,
+                                        color = Color(0xFF78350F)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Icon(
+                                        imageVector = Icons.Default.PlayArrow,
+                                        contentDescription = null,
+                                        tint = Color(0xFFB45309),
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 🔥 Section: Zor & Eleme Soruları Maratonu
+        item {
+            val hardQuestions = remember { KpssQuestionsData.getHardQuestions() }
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onStartHardQuestionsQuiz() }
+                    .testTag("hard_questions_card"),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF450A0A) // Deep Maroon
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFDC2626)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("🔥", fontSize = 22.sp)
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Zor & Eleme Soruları Maratonu",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                color = Color(0xFFDC2626),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Text(
+                                    text = "${hardQuestions.size} SORU",
+                                    color = Color.White,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = "ÖSYM'nin en yüksek çeldiriciye sahip zor sorularıyla 85+ puanı garantile.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFFECACA)
+                        )
+                    }
+
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "Başlat",
+                        tint = Color.White
+                    )
                 }
             }
         }
@@ -656,17 +845,38 @@ fun DailyQuestionCard(
                     }
                 }
 
-                Surface(
-                    color = question.subject.color.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(8.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = question.subject.displayName,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = question.subject.color,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                    )
+                    if (question.isPastExam) {
+                        Surface(
+                            color = Color(0xFFFEF3C7),
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFD97706))
+                        ) {
+                            Text(
+                                text = "🏛️ ${question.formattedExamBadge}",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF92400E),
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+
+                    Surface(
+                        color = question.subject.color.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = question.subject.displayName,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = question.subject.color,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
                 }
             }
 

@@ -1,6 +1,6 @@
 {
   "name": "RoseWin",
-  "description": "Kapsamlı KPSS deneme sınavları, konu anlatımları, güncel bilgiler, yapay zeka destekli performans analizi ve hatalı soru defteri.",
+  "description": "Kapsamlı KPSS deneme sınavları, geçmiş yıllarda çıkmış KPSS soruları, detaylı konu anlatımları ve şifreleri, güncel bilgiler, yapay zeka performans analizi ve hatalı soru defteri.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

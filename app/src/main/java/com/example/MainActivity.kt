@@ -230,6 +230,8 @@ fun MainAppContent(viewModel: KpssViewModel) {
                     wrongQuestions = wrongQuestions,
                     onStartTrialExam = { viewModel.startGeneralTrialExam(examNumber = 1) },
                     onStartSubjectQuiz = { subject -> viewModel.startSubjectQuiz(subject) },
+                    onStartPastExamQuiz = { year -> viewModel.startPastExamQuiz(year) },
+                    onStartHardQuestionsQuiz = { viewModel.startHardQuestionsQuiz() },
                     onNavigateToLectures = { currentDestination = AppDestination.LECTURES },
                     onNavigateToCurrentAffairs = { currentDestination = AppDestination.CURRENT_AFFAIRS },
                     onNavigateToWrongQuestions = { currentDestination = AppDestination.WRONG_QUESTIONS },

@@ -141,7 +141,7 @@ fun LecturesScreen(
                     FilterChip(
                         selected = selectedSubject == null,
                         onClick = { selectedSubject = null },
-                        label = { Text("Tüm Dersler") },
+                        label = { Text("Tüm Konular (${allLectures.size})") },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = Color.White
@@ -149,10 +149,11 @@ fun LecturesScreen(
                     )
                 }
                 items(Subject.values()) { subj ->
+                    val count = allLectures.count { it.subject == subj }
                     FilterChip(
                         selected = selectedSubject == subj,
                         onClick = { selectedSubject = if (selectedSubject == subj) null else subj },
-                        label = { Text(subj.displayName) },
+                        label = { Text("${subj.displayName} ($count)") },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = subj.color,
                             selectedLabelColor = Color.White
@@ -160,6 +161,14 @@ fun LecturesScreen(
                     )
                 }
             }
+        }
+
+        item {
+            Text(
+                text = "${filteredLectures.size} konu anlatımı listeleniyor • Detayları görmek ve şifreleri açmak için konuya dokunun",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
 
         // Lectures List
